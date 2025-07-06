@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HOD Panel</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="form-box">
+    <h2>Welcome, {{ name }} (HOD Panel)</h2>
+    <a href="/logout">Logout</a>
+    <hr>
+
+    <h3>Teacher-Approved Leave Requests</h3>
+    {% if leaves %}
+      {% for row in leaves %}
+        <div class="request-box">
+          <p><strong>Student:</strong> {{ row['student_name'] }} ({{ row['student_id'] }})</p>
+          <p><strong>Dates:</strong> {{ row['start_date'] }} to {{ row['end_date'] }} ({{ row['reason'] }})</p>
+          <p><strong>Attendance:</strong> {{ row['attendance'] }}%</p>
+          <form action="/hod-action" method="post">
+            <input type="hidden" name="student_id" value="{{ row['student_id'] }}">
+            <input type="hidden" name="timestamp" value="{{ row['timestamp'] }}">
+            <input type="hidden" name="days" value="{{ row['days'] }}">
+            <button name="action" value="approve">✅ Approve</button>
+            <button name="action" value="reject">❌ Reject</button>
+          </form>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No requests available.</p>
+    {% endif %}
+  </div>
+</body>
+</html>

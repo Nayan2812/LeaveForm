@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Leave Form</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="form-box">
+    <h2>Leave Application Form</h2>
+
+    <!-- ✅ Form starts -->
+    <form action="/submit-leave" method="POST">
+      <label>Name:</label>
+      <input type="text" name="student_name" required>
+
+      <label>Student ID:</label>
+      <input type="text" name="student_id" required>
+
+      <label>Year:</label>
+      <input type="number" name="year" min="1" max="4" required>
+
+      <label>Attendance %:</label>
+      <input type="number" name="attendance" step="0.1" required>
+
+      <label>Email:</label>
+      <input type="email" name="email" required>
+
+      <label>Branch:</label>
+      <select name="branch" required>
+        <option>BTECH CS</option>
+        <option>BTECH CE</option>
+        <option>BTECH AI-ML</option>
+        <option>BTECH IT</option>
+        <option>MBA TECH CE</option>
+        <option>B-PHARM</option>
+        <option>TEXTILE</option>
+      </select>
+
+      <label>Batch:</label>
+      <input type="text" name="batch" required>
+
+      <label>Reason:</label>
+      <textarea name="reason" required></textarea>
+
+      <label>Leave From:</label>
+      <input type="date" name="start_date" required>
+
+      <label>Leave To:</label>
+      <input type="date" name="end_date" required>
+
+      <label>Mentor:</label>
+      <input type="text" name="mentor" required>
+
+      <button type="submit">Submit Leave Request</button>
+    </form>
+    <!-- ✅ Form ends -->
+
+    <hr>
+    <h3>Your Leave History</h3>
+    {% if leaves %}
+      <table border="1" cellpadding="6">
+        <tr>
+          <th>From</th><th>To</th><th>Days</th><th>Status</th>
+        </tr>
+        {% for row in leaves %}
+        <tr>
+          <td>{{ row['start_date'] }}</td>
+          <td>{{ row['end_date'] }}</td>
+          <td>{{ row['days'] }}</td>
+          <td>{{ row['status'] }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <p>No leave records found.</p>
+    {% endif %}
+
+    {% if qr %}
+      <hr>
+      <h3>QR Gate Pass</h3>
+      <img src="data:image/png;base64,{{ qr }}" alt="QR Code"><br><br>
+      <a download="leave-pass.png" href="data:image/png;base64,{{ qr }}">
+        <button>Download QR</button>
+      </a>
+    {% endif %}
+
+    <br>
+    <a href="/logout">Logout</a>
+  </div>
+</body>
+</html>

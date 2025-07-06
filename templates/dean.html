@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dean Panel</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="form-box">
+    <h2>Welcome, {{ name }} (Dean Panel)</h2>
+    <a href="/logout">Logout</a>
+    <hr>
+
+    <h3>Leave Requests (>3 days)</h3>
+    {% if leaves %}
+      {% for row in leaves %}
+        <div class="request-box">
+          <p><strong>Student:</strong> {{ row['student_name'] }} ({{ row['student_id'] }})</p>
+          <p><strong>Dates:</strong> {{ row['start_date'] }} to {{ row['end_date'] }} — {{ row['days'] }} day(s)</p>
+          <p><strong>Reason:</strong> {{ row['reason'] }}</p>
+          <form action="/dean-action" method="post">
+            <input type="hidden" name="student_id" value="{{ row['student_id'] }}">
+            <input type="hidden" name="timestamp" value="{{ row['timestamp'] }}">
+            <button name="action" value="approve">✅ Approve</button>
+            <button name="action" value="reject">❌ Reject</button>
+          </form>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No leave requests pending for approval.</p>
+    {% endif %}
+  </div>
+</body>
+</html>
