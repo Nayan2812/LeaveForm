@@ -24,9 +24,9 @@
 
       <label>Email:</label>
       <input type="email" name="email" required>
-
+      
       <label>Branch:</label>
-      <select name="branch" required>
+        <select name="branch" required>
         <option>BTECH CS</option>
         <option>BTECH CE</option>
         <option>BTECH AI-ML</option>
@@ -34,10 +34,14 @@
         <option>MBA TECH CE</option>
         <option>B-PHARM</option>
         <option>TEXTILE</option>
-      </select>
+        </select>
 
-      <label>Batch:</label>
-      <input type="text" name="batch" required style="display:none;"> 
+        <label>Batch:</label>
+        <div id="batch-container">
+            <input type="text" name="batch" id="batch-placeholder" required>
+        </div>
+
+ 
 
       <label>Reason:</label>
       <textarea name="reason" required></textarea>
@@ -49,7 +53,10 @@
       <input type="date" name="end_date" required>
 
       <label>Mentor:</label>
-      <input type="text" name="mentor" required>
+      <select name="mentor" id="mentor-select" required>
+        <option value="">-- Select Mentor --</option>
+      </select>
+
 
       <button type="submit">Submit Leave Request</button>
     </form>
@@ -98,38 +105,86 @@
     "TEXTILE": ["T1", "T2"]
   };
 
+  const mentorMap = {
+    "A1": "Sugam Shivare",
+    "A2": "Dileep Kumar",
+    "B1": "Dr. Bagal",
+    "B2": "Rehan Ahmed",
+    "C1": "Prof. Rajshekhar",
+    "C2": "Sachin Bhandari",
+    "D1": "Suraj Patil",
+    "D2": "Rehan Ahmed",
+    "E1": "Dr. Ashok Panigrahi",
+    "E2": "Dr. Bagal",
+    "F1": "Dileep Kumar",
+    "F2": "Sachin Bhandari",
+    "M1": "Mohita Patel",
+    "M2": "Dileep Kumar",
+    "P1": "Vishal Fegde",
+    "P2": "Sneha Yadav",
+    "T1": "Sugam Shivare",
+    "T2": "Monika Verma"
+  };
+
   const branchSelect = document.querySelector('select[name="branch"]');
-  const batchInput = document.querySelector('input[name="batch"]');
+  const batchContainer = document.getElementById('batch-container');
+  const mentorSelect = document.getElementById('mentor-select');
 
-  // Create a new select element
-  const batchSelect = document.createElement('select');
-  batchSelect.name = "batch";
-  batchSelect.required = true;
-  batchSelect.style.width = "100%";
-  batchSelect.style.padding = "12px";
-  batchSelect.style.marginBottom = "8px";
-  batchSelect.style.borderRadius = "8px";
+  function createBatchDropdown(batches) {
+    const select = document.createElement('select');
+    select.name = "batch";
+    select.required = true;
+    select.style.width = "100%";
+    select.style.padding = "12px";
+    select.style.marginBottom = "10px";
+    select.style.borderRadius = "8px";
 
-  // Replace input with select
-  batchInput.parentNode.replaceChild(batchSelect, batchInput);
+    const placeholder = document.getElementById('batch-placeholder');
+    if (placeholder) batchContainer.removeChild(placeholder);
 
-  branchSelect.addEventListener('change', () => {
-    const selectedBranch = branchSelect.value;
-    const batches = batchOptions[selectedBranch] || [];
+    select.addEventListener('change', () => {
+      const selectedBatch = select.value;
+      const mentorName = mentorMap[selectedBatch] || '';
 
-    batchSelect.innerHTML = ""; // clear old options
+      // auto-select mentor dropdown
+      Array.from(mentorSelect.options).forEach(option => {
+        option.selected = option.value === mentorName;
+      });
+    });
 
     batches.forEach(batch => {
       const option = document.createElement('option');
-      option.textContent = batch;
       option.value = batch;
-      batchSelect.appendChild(option);
+      option.textContent = batch;
+      select.appendChild(option);
+    });
+
+    batchContainer.appendChild(select);
+    select.dispatchEvent(new Event('change'));
+  }
+
+  // Populate mentor dropdown on page load
+  window.addEventListener('DOMContentLoaded', () => {
+    const uniqueMentors = [...new Set(Object.values(mentorMap))];
+    uniqueMentors.forEach(name => {
+      const option = document.createElement('option');
+      option.value = name;
+      option.textContent = name;
+      mentorSelect.appendChild(option);
     });
   });
 
-  // Trigger on page load if already selected
-  branchSelect.dispatchEvent(new Event('change'));
-    </script>
+  // Branch change triggers batch dropdown creation
+  branchSelect.addEventListener('change', () => {
+    const selectedBranch = branchSelect.value;
+    const batches = batchOptions[selectedBranch] || [];
+    createBatchDropdown(batches);
+  });
+
+  if (branchSelect.value) {
+    branchSelect.dispatchEvent(new Event('change'));
+  }
+</script>
 
 </body>
 </html>
