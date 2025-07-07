@@ -1,2 +1,1 @@
 student_name,student_id,year,attendance,email,branch,batch,reason,start_date,end_date,mentor,status,timestamp
-Harsh,CS001,1,90,harsh@gmail.com,BTECH CS,A2,hiojs,2025-07-07,2025-07-08,Dillip Kumar,Granted,2025-07-06T18:43:56.890381
