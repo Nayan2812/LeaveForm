@@ -14,7 +14,7 @@
       <input type="text" name="student_name" required>
 
       <label>Student ID:</label>
-      <input type="text" name="student_id" required>
+      <input type="text" name="student_id" required value="{{ student_id }}" readonly>
 
       <label>Year:</label>
       <input type="number" name="year" min="1" max="4" required>
@@ -37,7 +37,7 @@
       </select>
 
       <label>Batch:</label>
-      <input type="text" name="batch" required>
+      <input type="text" name="batch" required style="display:none;"> 
 
       <label>Reason:</label>
       <textarea name="reason" required></textarea>
@@ -87,5 +87,49 @@
     <br>
     <a href="/logout">Logout</a>
   </div>
+  <script>
+  const batchOptions = {
+    "BTECH CS": ["A1", "A2", "B1", "B2"],
+    "BTECH CE": ["C1", "C2", "D1", "D2"],
+    "BTECH AI-ML": ["F1", "F2"],
+    "BTECH IT": ["E1", "E2"],
+    "MBA TECH CE": ["M1", "M2"],
+    "B-PHARM": ["P1", "P2"],
+    "TEXTILE": ["T1", "T2"]
+  };
+
+  const branchSelect = document.querySelector('select[name="branch"]');
+  const batchInput = document.querySelector('input[name="batch"]');
+
+  // Create a new select element
+  const batchSelect = document.createElement('select');
+  batchSelect.name = "batch";
+  batchSelect.required = true;
+  batchSelect.style.width = "100%";
+  batchSelect.style.padding = "12px";
+  batchSelect.style.marginBottom = "8px";
+  batchSelect.style.borderRadius = "8px";
+
+  // Replace input with select
+  batchInput.parentNode.replaceChild(batchSelect, batchInput);
+
+  branchSelect.addEventListener('change', () => {
+    const selectedBranch = branchSelect.value;
+    const batches = batchOptions[selectedBranch] || [];
+
+    batchSelect.innerHTML = ""; // clear old options
+
+    batches.forEach(batch => {
+      const option = document.createElement('option');
+      option.textContent = batch;
+      option.value = batch;
+      batchSelect.appendChild(option);
+    });
+  });
+
+  // Trigger on page load if already selected
+  branchSelect.dispatchEvent(new Event('change'));
+    </script>
+
 </body>
 </html>

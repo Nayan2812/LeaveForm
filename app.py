@@ -84,7 +84,7 @@ def student():
                         break
 
     print("🖨️ Total leaves found:", len(leaves))
-    return render_template('student.html', name=session['name'], leaves=leaves, qr=qr_base64)
+    return render_template('student.html', name=session['name'], student_id=session['user_id'], leaves=leaves, qr=qr_base64)
 
 
 @app.route('/submit-leave', methods=['POST'])
